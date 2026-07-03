@@ -47,5 +47,5 @@ Speed is deliberately far below the source missile's aerial top speed (see the t
 Drop `Torpedo.dll` into your `BepInEx/plugins` folder.
 
 ## Known limitations
-- Torpedoes are generally undetectable once it dives, but can still be stopped using explosive on the surface or an obstacle in its path.
+- Torpedoes are generally undetectable once it dives, but can still be stopped by explosion on the surface or an obstacle in its path.
 - Torpedoes target whatever the underlying missile's seeker would normally target (they don't yet filter to naval-only targets).
