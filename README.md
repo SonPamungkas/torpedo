@@ -1,5 +1,7 @@
 # Torpedo
 
+https://github.com/user-attachments/assets/61b5fd6c-d22f-40bf-add1-6f6740428b9e
+
 Adds four torpedo variants to Nuclear Option (cloned from vanilla anti-ship and cruise missiles). Fire them at range like any other weapon — they drop to the water, and swim toward the target before detonating on impact or proximity to a ship.
 
 ## What it adds
