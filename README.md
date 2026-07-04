@@ -6,16 +6,16 @@ Adds four torpedo variants to Nuclear Option (cloned from vanilla anti-ship and 
 
 ## What it adds
 
-### **SCT-350 'Mako'** — fast super-cavitating torpedo to deliver payload quickly from underwater.
+### **SCT-350 'Mako'** — Fast, super-cavitating interceptor. Purpose-built for both anti-ship missions and counter-torpedo defense.
 <img width="1669" height="1080" alt="Torp1" src="https://github.com/user-attachments/assets/a6380ed6-f1d0-4356-9e8f-3eaea4fff394" />
 
-### **Type-88 'Lemon'** — light, agile, compact, versatile, cheap, and deceptively lethal.
+### **Type-88 'Lemon'** — Light, compact, cheap, and agile. Deceptively lethal, Iideal choice for saturation or ambush attack.
 <img width="1669" height="1080" alt="Torp2" src="https://github.com/user-attachments/assets/56eb866c-9ec3-4474-8929-a6c4f275a5f2" />
 
-### **HT-200 'Hammerhead'** — heavy kinetic payload for splitting targets in half.
+### **HT-200 'Hammerhead'** — Heavy kinetic penetrator. Sacrifices velocity for a payload designed to split a carrier in half.
 <img width="1671" height="1080" alt="Torp3" src="https://github.com/user-attachments/assets/7a101654-e4e8-4f64-a5bc-d5ea6f5e0883" />
 
-### **NT-2 'Megalodon' (20kt)** — nuclear torpedo for anti-fleet purpose.
+### **NT-2 'Megalodon' (20kt)** — Nuclear-tipped strategic asset. Engineered for the total neutralization of enemy naval task forces.
 <img width="1669" height="1080" alt="Torp4" src="https://github.com/user-attachments/assets/ec922472-cc92-4bc9-b3bb-382ad8e05a03" />
 
 Every vanilla mount configuration for each source missile (single, double, internal bay, external, etc.) is automatically available for its torpedo counterpart — no manual per-aircraft setup needed.
