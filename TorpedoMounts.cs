@@ -23,25 +23,26 @@ namespace Torpedo
             public float HoverAltitude;
             public float SpeedMultiplier;
             public float ExplosiveMultiplier;
+            public float PenetrationBonus;
         }
 
         private static readonly VariantInfo[] Variants = new[]
         {
             new VariantInfo { SourceMissile = "AShM1", NewName = "TorpedoFast",
-                DisplayName = "SCT-350 'Mako'", ShortName = "TORP-FAST", Mass = 300f, Cost = 12.5f, HoverAltitude = -5f, SpeedMultiplier = 0.144f, ExplosiveMultiplier = 2f,
+                DisplayName = "SCT-350 'Mako'", ShortName = "TORP-FAST", Mass = 300f, Cost = 12.5f, HoverAltitude = -5f, SpeedMultiplier = 0.144f, ExplosiveMultiplier = 2f, PenetrationBonus = 500f,
                 Description = "A super-cavitating interceptor engineered for pure kinetic urgency. By generating a localized gas-bubble envelope to negate hydrodynamic drag, the Mako closes the distance to high-value targets with predatory velocity, denying enemies any window to deploy countermeasures." },
             new VariantInfo { SourceMissile = "AShM2", NewName = "TorpedoLight",
-                DisplayName = "Type-88 'Lemon'", ShortName = "TORP-LIGHT", Mass = 250f, Cost = 10.5f, HoverAltitude = -5f, SpeedMultiplier = 0.141f, ExplosiveMultiplier = 2.5f,
+                DisplayName = "Type-88 'Lemon'", ShortName = "TORP-LIGHT", Mass = 250f, Cost = 10.5f, HoverAltitude = -5f, SpeedMultiplier = 0.141f, ExplosiveMultiplier = 2.5f, PenetrationBonus = 500f,
                 Description = "Compact, agile, and deceptively lethal. While its 'Lemon' designation suggests a dud, this torpedo is a nightmare for defensive grids. Its high maneuverability and low-profile signature make it the premier choice for saturation strikes and ambush that exhaust enemy point-defense systems." },
             new VariantInfo { SourceMissile = "CruiseMissile1", NewName = "TorpedoBig",
-                DisplayName = "HT-200 'Hammerhead'", ShortName = "TORP-BIG", Mass = 450f, Cost = 12.5f, HoverAltitude = -5f, SpeedMultiplier = 0.047f, ExplosiveMultiplier = 3f,
+                DisplayName = "HT-200 'Hammerhead'", ShortName = "TORP-BIG", Mass = 450f, Cost = 12.5f, HoverAltitude = -5f, SpeedMultiplier = 0.047f, ExplosiveMultiplier = 3f, PenetrationBonus = 4000f,
                 Description = "The anvil of the fleet. The Hammerhead sacrifices sprint velocity for raw, concentrated payload capacity. Equipped with an armor-piercing tandem warhead, it is purpose-built to breach reinforced plating and shatter the structural integrity of capital ship keels." },
             new VariantInfo { SourceMissile = "CruiseMissile20kt", NewName = "Torpedo20kt",
-                DisplayName = "NT-2 'Megalodon' (20kt)", ShortName = "TORP-20KT", Mass = 450f, Cost = 12.5f, HoverAltitude = -10f, SpeedMultiplier = 0.059f, ExplosiveMultiplier = 1f,
+                DisplayName = "NT-2 'Megalodon' (20kt)", ShortName = "TORP-20KT", Mass = 450f, Cost = 12.5f, HoverAltitude = -10f, SpeedMultiplier = 0.059f, ExplosiveMultiplier = 1f, PenetrationBonus = 0f,
                 Description = "The apex predator of the naval theater. This nuclear-tipped strategic ordnance is designed for total area denial. It doesn't just damage; it erases. A single detonation is capable of neutralizing entire battlegroups, turning a tactical engagement into a strategic vacuum." },
         };
 
-        private static readonly HashSet<string> _createdMissiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                 private static readonly HashSet<string> _createdMissiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<string> _createdMounts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public static readonly Dictionary<string, float> HoverAltitudeByName =
@@ -49,6 +50,9 @@ namespace Torpedo
 
         public static readonly HashSet<string> CreatedMountNames =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        private static readonly List<(WeaponMount Mount, string MountName, string SourceMountName)> _mountPairs =
+            new List<(WeaponMount, string, string)>();
 
         static TorpedoMounts_Patch()
         {
@@ -60,7 +64,14 @@ namespace Torpedo
         public static void Prefix(Encyclopedia __instance)
         {
             try { AddMissingMounts(__instance); }
-            catch (Exception ex) { TorpedoPlugin.ModLogger.LogError("[Torpedo] TorpedoMounts failed: " + ex); }
+            catch (Exception ex) { TorpedoPlugin.ModLogger.LogError("[Torpedo] TorpedoMounts Prefix failed: " + ex); }
+        }
+
+        [HarmonyPostfix]
+        public static void Postfix(Encyclopedia __instance)
+        {
+            try { AddMissingMounts(__instance); }
+            catch (Exception ex) { TorpedoPlugin.ModLogger.LogError("[Torpedo] TorpedoMounts Postfix failed: " + ex); }
         }
 
         private static void AddMissingMounts(Encyclopedia __instance)
@@ -114,6 +125,29 @@ namespace Torpedo
                     }
 
                     RegisterOnHardpointsCarrying(mount, newMountName, sourceMount.name);
+
+                    if (!_mountPairs.Any(p => p.MountName == newMountName))
+                        _mountPairs.Add((mount, newMountName, sourceMount.name));
+                }
+            }
+        }
+
+        internal static void RegisterOnWeaponManager(WeaponManager wm)
+        {
+            if (wm == null || wm.hardpointSets == null) return;
+
+            foreach (var hardpointSet in wm.hardpointSets)
+            {
+                if (hardpointSet == null || hardpointSet.weaponOptions == null) continue;
+
+                foreach (var (mount, mountName, sourceMountName) in _mountPairs)
+                {
+                    if (mount == null) continue;
+                    if (!hardpointSet.weaponOptions.Any(m => m != null && m.name == sourceMountName)) continue;
+                    if (hardpointSet.weaponOptions.Contains(mount)) continue;
+
+                    hardpointSet.weaponOptions.Add(mount);
+                    TorpedoPlugin.ModLogger.LogInfo($"[Torpedo] TorpedoMounts: registered {mountName} on {wm.gameObject.name} hardpoint '{hardpointSet.name}' (WeaponManager.Awake)");
                 }
             }
         }
@@ -140,6 +174,9 @@ namespace Torpedo
             Missile clonedMissile = missileClone.GetComponent<Missile>();
             ApplySpeedMultiplier(clonedMissile, variant.SpeedMultiplier);
 
+            VLSBooster booster = missileClone.GetComponentInChildren<VLSBooster>(true);
+            if (booster != null) UnityEngine.Object.Destroy(booster.gameObject);
+
             MissileDefinition missileDefinition = UnityEngine.Object.Instantiate(sourceMissileDefinition);
             missileDefinition.name = variant.NewName;
             missileDefinition.jsonKey = variant.NewName;
@@ -158,10 +195,14 @@ namespace Torpedo
             info.description = variant.Description;
             info.weaponPrefab = missileClone;
             info.blastDamage *= variant.ExplosiveMultiplier;
+            info.pierceDamage += variant.PenetrationBonus;
             Traverse.Create(clonedMissile).Field("info").SetValue(info);
 
             Traverse blastYieldTraverse = Traverse.Create(clonedMissile).Field("blastYield");
             blastYieldTraverse.SetValue(blastYieldTraverse.GetValue<float>() * variant.ExplosiveMultiplier);
+
+            Traverse pierceDamageTraverse = Traverse.Create(clonedMissile).Field("pierceDamage");
+            pierceDamageTraverse.SetValue(pierceDamageTraverse.GetValue<float>() + variant.PenetrationBonus);
 
             enc.missiles.Add(missileDefinition);
 
@@ -211,7 +252,13 @@ namespace Torpedo
                 Traverse motorTraverse = Traverse.Create(motor);
                 motorTraverse.Field("thrust").SetValue(motorTraverse.Field("thrust").GetValue<float>() * thrustMultiplier);
                 motorTraverse.Field("topSpeed").SetValue(motorTraverse.Field("topSpeed").GetValue<float>() * speedMultiplier);
+
                 motorTraverse.Field("burnTime").SetValue(motorTraverse.Field("burnTime").GetValue<float>() / speedMultiplier);
+            }
+
+            if (motorsArray.Length > 1)
+            {
+                Traverse.Create(missile).Field("motorStage").SetValue(motorsArray.Length - 1);
             }
         }
 
@@ -251,6 +298,33 @@ namespace Torpedo
                     TorpedoPlugin.ModLogger.LogInfo($"[Torpedo] TorpedoMounts: registered {mountName} on {wm.gameObject.name} hardpoint '{hardpointSet.name}'");
                 }
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(WeaponManager), "Awake")]
+    [HarmonyPriority(Priority.Last)]
+    public static class TorpedoMounts_WeaponManagerAwake_Patch
+    {
+        [HarmonyPostfix]
+        public static void Postfix(WeaponManager __instance)
+        {
+            try { TorpedoMounts_Patch.RegisterOnWeaponManager(__instance); }
+            catch (Exception ex) { TorpedoPlugin.ModLogger.LogError("[Torpedo] TorpedoMounts WeaponManager.Awake postfix failed: " + ex); }
+        }
+    }
+
+    [HarmonyPatch(typeof(WeaponChecker), "VetLoadout")]
+    public static class TorpedoMounts_VetLoadout_Patch
+    {
+        [HarmonyPrefix]
+        public static void Prefix(AircraftDefinition definition)
+        {
+            try
+            {
+                WeaponManager wm = definition?.unitPrefab?.GetComponent<Aircraft>()?.weaponManager;
+                if (wm != null) TorpedoMounts_Patch.RegisterOnWeaponManager(wm);
+            }
+            catch (Exception ex) { TorpedoPlugin.ModLogger.LogError("[Torpedo] TorpedoMounts VetLoadout prefix failed: " + ex); }
         }
     }
 }
