@@ -43,7 +43,7 @@ namespace Torpedo
             float dampK = 15f;
             float forceY = yError * springK - missile.rb.velocity.y * dampK;
 
-            if (yError < 0f && missile.rb.velocity.y <= 0f)
+            if (liveGlobalY <= 0f && yError < 0f && missile.rb.velocity.y <= 0f)
             {
                 forceY = Mathf.Max(forceY, -9.8f);
             }
@@ -55,25 +55,19 @@ namespace Torpedo
                 missile.rb.velocity = new Vector3(missile.rb.velocity.x, 0f, missile.rb.velocity.z);
             }
 
-            Vector3 tiltAxis = Vector3.Cross(missile.transform.up, Vector3.up);
-            if (tiltAxis.sqrMagnitude > 0.0001f)
-            {
-                missile.rb.AddTorque(tiltAxis * 100f, ForceMode.Acceleration);
-            }
-
             missile.rb.AddTorque(-missile.rb.angularVelocity * 5f, ForceMode.Acceleration);
 
             Vector3 horizVel = new Vector3(missile.rb.velocity.x, 0f, missile.rb.velocity.z);
             float currentSpeed = horizVel.magnitude;
             float minSpeed = 25f;
-
+            
             if (currentSpeed < minSpeed)
             {
                 Vector3 forward = missile.transform.forward;
                 forward.y = 0f;
                 if (forward.sqrMagnitude < 0.001f) forward = Vector3.forward;
                 forward.Normalize();
-
+                
                 missile.rb.AddForce(forward * 15f, ForceMode.Acceleration);
             }
         }
