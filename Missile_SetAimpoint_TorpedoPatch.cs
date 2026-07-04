@@ -53,6 +53,13 @@ namespace Torpedo
 
             if (TorpedoPhysics.InCruisePhase(__instance))
             {
+                if (!TorpedoPhysics.IsOverWater(__instance))
+                {
+                    AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { Vector3.up, false, true });
+                    __instance.rb.velocity = Vector3.zero;
+                    return false;
+                }
+
                 aimPoint.y = hoverAltitude;
 
                 if (__instance.GlobalPosition().y <= 0f)
@@ -72,7 +79,7 @@ namespace Torpedo
                         }
                     }
                 }
-
+                
                 Vector3 toTarget = aimPoint - __instance.GlobalPosition();
                 if (toTarget.sqrMagnitude < 40000f)
                 {
