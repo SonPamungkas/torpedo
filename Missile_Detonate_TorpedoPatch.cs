@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using System.Diagnostics;
 
 namespace Torpedo
 {
@@ -14,7 +15,7 @@ namespace Torpedo
             if (!hitArmor && !hitTerrain)
             {
                 TorpedoPlugin.ModLogger.LogDebug($"[Torpedo] Prevented self-destruct for {__instance.definition.jsonKey}");
-                return false;
+                return false; 
             }
 
             return true;
