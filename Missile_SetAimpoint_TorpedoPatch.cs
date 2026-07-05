@@ -17,6 +17,16 @@ namespace Torpedo
             AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, TopAttack>("topAttack");
         private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, TerminalBoost> terminalBoostRef =
             AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, TerminalBoost>("terminalBoost");
+        private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, float> finDelayRef =
+            AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, float>("finDelay");
+        private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, float> terminalRangeRef =
+            AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, float>("terminalRange");
+        private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, bool> terminalModeRef =
+            AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, bool>("terminalMode");
+        private static readonly AccessTools.FieldRef<MissileSeeker, Unit> targetUnitRef =
+            AccessTools.FieldRefAccess<MissileSeeker, Unit>("targetUnit");
+        private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, Transform> targetPartRef =
+            AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, Transform>("targetPart");
 
         private static readonly HashSet<OpticalSeekerCruiseMissile> _neutered = new HashSet<OpticalSeekerCruiseMissile>();
 
@@ -25,6 +35,13 @@ namespace Torpedo
             if (__instance.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.TryGetValue(__instance.definition.jsonKey, out float hoverAltitude))
                 return true;
+
+            if (__instance.GlobalPosition().y > 0f && __instance.rb.velocity.magnitude < 10f)
+            {
+                AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { Vector3.up, false, true });
+                __instance.rb.velocity = Vector3.zero;
+                return false;
+            }
 
             if (seekerRef(__instance) is OpticalSeekerCruiseMissile cSeeker && _neutered.Add(cSeeker))
             {
@@ -44,14 +61,31 @@ namespace Torpedo
                     terminalBoost.Amount = 0f;
                     terminalBoost.Active = false;
                 }
+
+                finDelayRef(cSeeker) = float.MaxValue;
+
+                terminalRangeRef(cSeeker) = float.MaxValue;
             }
 
             if (seekerRef(__instance) is OpticalSeekerCruiseMissile seeker)
             {
                 altitudeTargetRef(seeker) = hoverAltitude;
+
+                terminalModeRef(seeker) = true;
+
+                if (targetPartRef(seeker) == null)
+                {
+                    Unit targetUnit = targetUnitRef(seeker);
+                    if (targetUnit != null) targetPartRef(seeker) = targetUnit.GetRandomPart();
+                }
             }
 
-            if (TorpedoPhysics.InCruisePhase(__instance))
+            aimPoint.y = __instance.GlobalPosition().y;
+
+            bool cruising = TorpedoPhysics.InCruisePhase(__instance);
+            TorpedoWake.UpdateWake(__instance, TorpedoPhysics.IsUnderWater(__instance));
+
+            if (cruising)
             {
                 if (!TorpedoPhysics.IsOverWater(__instance))
                 {
@@ -59,8 +93,6 @@ namespace Torpedo
                     __instance.rb.velocity = Vector3.zero;
                     return false;
                 }
-
-                aimPoint.y = hoverAltitude;
 
                 if (__instance.GlobalPosition().y <= 0f)
                 {
@@ -79,7 +111,7 @@ namespace Torpedo
                         }
                     }
                 }
-                
+
                 Vector3 toTarget = aimPoint - __instance.GlobalPosition();
                 if (toTarget.sqrMagnitude < 40000f)
                 {

@@ -1,3 +1,4 @@
+using System;
 using HarmonyLib;
 using UnityEngine;
 
@@ -11,7 +12,8 @@ namespace Torpedo
             if (__instance.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.ContainsKey(__instance.definition.jsonKey)) return true;
             if (__instance.rb == null) return true;
-            if (__instance.GlobalPosition().y >= 50f) return true;
+
+            if (__instance.GlobalPosition().y > 0f) return true;
             if (!TorpedoPhysics.IsOverWater(__instance)) return true;
 
             RaycastHit[] hits = __instance.rb.SweepTestAll(
@@ -28,6 +30,10 @@ namespace Torpedo
                     __instance.rb.velocity = Vector3.zero;
                     return false;
                 }
+
+                AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { hit.normal, false, true });
+                __instance.rb.velocity = Vector3.zero;
+                return false;
             }
 
             return false;

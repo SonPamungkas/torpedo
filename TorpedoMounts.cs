@@ -29,13 +29,13 @@ namespace Torpedo
         private static readonly VariantInfo[] Variants = new[]
         {
             new VariantInfo { SourceMissile = "AShM1", NewName = "TorpedoFast",
-                DisplayName = "SCT-350 'Mako'", ShortName = "TORP-FAST", Mass = 300f, Cost = 12.5f, HoverAltitude = -5f, SpeedMultiplier = 0.144f, ExplosiveMultiplier = 2f, PenetrationBonus = 500f,
+                DisplayName = "SCT-350 'Mako'", ShortName = "TORP-FAST", Mass = 300f, Cost = 12.5f, HoverAltitude = -2f, SpeedMultiplier = 0.144f, ExplosiveMultiplier = 2f, PenetrationBonus = 500f,
                 Description = "A super-cavitating interceptor engineered for pure kinetic urgency. By generating a localized gas-bubble envelope to negate hydrodynamic drag, the Mako closes the distance to high-value targets with predatory velocity, denying enemies any window to deploy countermeasures." },
             new VariantInfo { SourceMissile = "AShM2", NewName = "TorpedoLight",
-                DisplayName = "Type-88 'Lemon'", ShortName = "TORP-LIGHT", Mass = 250f, Cost = 10.5f, HoverAltitude = -5f, SpeedMultiplier = 0.141f, ExplosiveMultiplier = 2.5f, PenetrationBonus = 500f,
+                DisplayName = "Type-88 'Lemon'", ShortName = "TORP-LIGHT", Mass = 250f, Cost = 10.5f, HoverAltitude = -1f, SpeedMultiplier = 0.141f, ExplosiveMultiplier = 2.5f, PenetrationBonus = 500f,
                 Description = "Compact, agile, and deceptively lethal. While its 'Lemon' designation suggests a dud, this torpedo is a nightmare for defensive grids. Its high maneuverability and low-profile signature make it the premier choice for saturation strikes and ambush that exhaust enemy point-defense systems." },
             new VariantInfo { SourceMissile = "CruiseMissile1", NewName = "TorpedoBig",
-                DisplayName = "HT-200 'Hammerhead'", ShortName = "TORP-BIG", Mass = 450f, Cost = 12.5f, HoverAltitude = -5f, SpeedMultiplier = 0.047f, ExplosiveMultiplier = 3f, PenetrationBonus = 4000f,
+                DisplayName = "HT-200 'Hammerhead'", ShortName = "TORP-BIG", Mass = 450f, Cost = 12.5f, HoverAltitude = -8f, SpeedMultiplier = 0.047f, ExplosiveMultiplier = 3f, PenetrationBonus = 4000f,
                 Description = "The anvil of the fleet. The Hammerhead sacrifices sprint velocity for raw, concentrated payload capacity. Equipped with an armor-piercing tandem warhead, it is purpose-built to breach reinforced plating and shatter the structural integrity of capital ship keels." },
             new VariantInfo { SourceMissile = "CruiseMissile20kt", NewName = "Torpedo20kt",
                 DisplayName = "NT-2 'Megalodon' (20kt)", ShortName = "TORP-20KT", Mass = 450f, Cost = 12.5f, HoverAltitude = -10f, SpeedMultiplier = 0.059f, ExplosiveMultiplier = 1f, PenetrationBonus = 0f,

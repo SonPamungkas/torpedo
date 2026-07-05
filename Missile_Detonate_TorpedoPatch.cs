@@ -1,6 +1,5 @@
 using HarmonyLib;
 using UnityEngine;
-using System.Diagnostics;
 
 namespace Torpedo
 {
@@ -12,11 +11,12 @@ namespace Torpedo
             if (__instance.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.ContainsKey(__instance.definition.jsonKey)) return true;
 
-            if (!hitArmor && !hitTerrain)
+            if (!hitArmor && !hitTerrain && !Missile_TakeDamage_TorpedoPatch.InProgress.Contains(__instance))
             {
-                TorpedoPlugin.ModLogger.LogDebug($"[Torpedo] Prevented self-destruct for {__instance.definition.jsonKey}");
-                return false; 
+                return false;
             }
+
+            TorpedoWake.RemoveWake(__instance);
 
             return true;
         }

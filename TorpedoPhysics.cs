@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Torpedo
@@ -7,25 +6,12 @@ namespace Torpedo
     {
         public static bool IsOverWater(Missile missile)
         {
-            if (Physics.Raycast(missile.transform.position, Vector3.down, out RaycastHit hit, 500f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-            {
-                float hitGlobalY = (float)hit.point.ToGlobalPosition().y;
+            return missile.GlobalPosition().y <= 2f;
+        }
 
-                if (Mathf.Abs(hitGlobalY) < 1f)
-                    return true;
-
-                if (hitGlobalY > 1f)
-                    return false;
-
-                Transform t = hit.collider.transform;
-                for (int i = 0; i < 3 && t != null; i++, t = t.parent)
-                {
-                    if (t.name.IndexOf("terrain2_tile", StringComparison.OrdinalIgnoreCase) >= 0)
-                        return true;
-                }
-                return false;
-            }
-            return true;
+        public static bool IsUnderWater(Missile missile)
+        {
+            return missile.GlobalPosition().y <= 0f;
         }
 
         public static bool InCruisePhase(Missile missile)
@@ -40,7 +26,7 @@ namespace Torpedo
             float yError = targetGlobalY - liveGlobalY;
 
             float springK = 50f;
-            float dampK = 15f;
+            float dampK = 10f;
             float forceY = yError * springK - missile.rb.velocity.y * dampK;
 
             if (liveGlobalY <= 0f && yError < 0f && missile.rb.velocity.y <= 0f)
@@ -50,24 +36,30 @@ namespace Torpedo
 
             missile.rb.AddForce(new Vector3(0f, forceY, 0f), ForceMode.Acceleration);
 
-            if (liveGlobalY < targetGlobalY - 2f && missile.rb.velocity.y < 0f)
+            if (liveGlobalY >= targetGlobalY && missile.rb.velocity.y > 0f)
             {
                 missile.rb.velocity = new Vector3(missile.rb.velocity.x, 0f, missile.rb.velocity.z);
             }
 
-            missile.rb.AddTorque(-missile.rb.angularVelocity * 5f, ForceMode.Acceleration);
+            Vector3 tiltAxis = Vector3.Cross(missile.transform.up, Vector3.up);
+            if (tiltAxis.sqrMagnitude > 0.0001f)
+            {
+                missile.rb.AddTorque(tiltAxis * 50f, ForceMode.Acceleration);
+            }
+
+            missile.rb.AddTorque(-missile.rb.angularVelocity * 1f, ForceMode.Acceleration);
 
             Vector3 horizVel = new Vector3(missile.rb.velocity.x, 0f, missile.rb.velocity.z);
             float currentSpeed = horizVel.magnitude;
             float minSpeed = 25f;
-            
+
             if (currentSpeed < minSpeed)
             {
                 Vector3 forward = missile.transform.forward;
                 forward.y = 0f;
                 if (forward.sqrMagnitude < 0.001f) forward = Vector3.forward;
                 forward.Normalize();
-                
+
                 missile.rb.AddForce(forward * 15f, ForceMode.Acceleration);
             }
         }
