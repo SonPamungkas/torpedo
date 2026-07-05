@@ -6,23 +6,23 @@ Adds four torpedo variants to Nuclear Option (cloned from vanilla anti-ship and 
 
 ## What it adds
 
-### **SCT-350 'Mako'** — Fast, super-cavitating interceptor. Purpose-built for both anti-ship missions and counter-torpedo defense.
+### **SCT-350 'Mako'** — Fast, super-cavitating interceptor. For both anti-ship and counter-torpedo.
 <img width="1669" height="1080" alt="Torp1" src="https://github.com/user-attachments/assets/a6380ed6-f1d0-4356-9e8f-3eaea4fff394" />
 
-### **Type-88 'Lemon'** — Light, compact, cheap, and agile. Deceptively lethal, Iideal choice for saturation or ambush attack.
+### **Type-88 'Lemon'** — Light, compact, cheap, and agile. Deceptively lethal, Ideal choice for saturation or ambush.
 <img width="1669" height="1080" alt="Torp2" src="https://github.com/user-attachments/assets/56eb866c-9ec3-4474-8929-a6c4f275a5f2" />
 
-### **HT-200 'Hammerhead'** — Heavy kinetic penetrator. Sacrifices velocity for a payload designed to split a carrier in half.
+### **HT-200 'Hammerhead'** — Heavy kinetic penetrator. Low velocity, but carries 1350kg payload to split a carrier in half.
 <img width="1671" height="1080" alt="Torp3" src="https://github.com/user-attachments/assets/7a101654-e4e8-4f64-a5bc-d5ea6f5e0883" />
 
-### **NT-2 'Megalodon' (20kt)** — Nuclear-tipped strategic asset. Engineered for the total neutralization of enemy naval task forces.
+### **NT-2 'Megalodon' (20kt)** — Nuclear-tipped strategic asset. Erasing enemy ship and its escorts in a single delivery.
 <img width="1669" height="1080" alt="Torp4" src="https://github.com/user-attachments/assets/ec922472-cc92-4bc9-b3bb-382ad8e05a03" />
 
 Every vanilla mount configuration for each source missile (single, double, internal bay, external, etc.) is automatically available for its torpedo counterpart — no manual per-aircraft setup needed.
 
 ## How it behaves
 
-Fire it like a normal missile. It then transitions into torpedo mode: dives to its designated depth, holds a steady course, and detonates only when it actually hits (or near) a ship — not on the water surface, not on terrain it happens to fly near. Run one into land and it'll crash like anything else would.
+Fire it like a normal bomb. It transitions into torpedo mode once it touches the water: dives to its designated depth, holds a steady course, and detonates only when it actually hits (or near) a ship. Run one into land and it'll detonate.
 
 Speed is deliberately far below the source missile's aerial top speed (see the table below) — burn time is extended to match, so it still has the range to reach distant targets despite cruising much slower underwater.
 
