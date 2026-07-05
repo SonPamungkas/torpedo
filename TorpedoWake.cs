@@ -6,10 +6,15 @@ using UnityEngine;
 
 namespace Torpedo
 {
+    
+    
+    
+    
+    
     public static class TorpedoWake
     {
         private const float SpawnInterval = 0.2f;
-        private const float SplashLifetime = 1f;
+        private const float SplashLifetime = 16f;
 
         private static readonly Dictionary<Missile, float> _nextSpawnTime = new Dictionary<Missile, float>();
 
@@ -31,7 +36,11 @@ namespace Torpedo
 
             EnsureShipWakeTemplates();
 
+            
+            
+            
             GlobalPosition gp = missile.GlobalPosition();
+            if (gp.y < -2f) return;
             gp.y = 0f;
             Vector3 position = gp.ToLocalPosition();
 
@@ -46,6 +55,10 @@ namespace Torpedo
             }
         }
 
+        
+        
+        
+        
         private static void EnsureShipWakeTemplates()
         {
             if (_shipWakeLookupDone) return;
@@ -85,3 +98,4 @@ namespace Torpedo
         }
     }
 }
+
