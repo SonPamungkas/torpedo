@@ -36,7 +36,9 @@ Speed is deliberately far below the source missile's aerial top speed (see the t
 ## Requirements
 
 - BepInEx 5.4.23.5
-- No dependency on other mods — the mod clones and modifies vanilla assets directly at runtime.
+- No dependency on other mods — the mod clones and modifies vanilla assets directly. (Which made it client-side and available on multiplayer.)
+
+## Optional
 - [Surface Loadout](https://github.com/SonPamungkas/surface-loadout) if you want naval or ground unit to fire the torpedo that you want.
 
 ### Argus Lemon
