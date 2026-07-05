@@ -29,17 +29,17 @@ namespace Torpedo
         private static readonly VariantInfo[] Variants = new[]
         {
             new VariantInfo { SourceMissile = "AShM1", NewName = "TorpedoFast",
-                DisplayName = "SCT-350 'Mako'", ShortName = "TORP-FAST", Mass = 300f, Cost = 12.5f, HoverAltitude = -2f, SpeedMultiplier = 0.144f, ExplosiveMultiplier = 2f, PenetrationBonus = 500f,
-                Description = "A super-cavitating interceptor engineered for pure kinetic urgency. By generating a localized gas-bubble envelope to negate hydrodynamic drag, the Mako closes the distance to high-value targets with predatory velocity, denying enemies any window to deploy countermeasures." },
+                DisplayName = "SCT-350 'Mako'", ShortName = "TORP-FAST", Mass = 300f, Cost = 12.5f, HoverAltitude = -1f, SpeedMultiplier = 0.144f, ExplosiveMultiplier = 2f, PenetrationBonus = 500f,
+                Description = "A super-cavitating interceptor engineered for pure kinetic urgency. By generating a localized gas-bubble envelope to negate hydrodynamic drag, the Mako closes the distance to its targets with predatory velocity. It can also be used as a counter-torpedo, but not very effective against its own kind" },
             new VariantInfo { SourceMissile = "AShM2", NewName = "TorpedoLight",
                 DisplayName = "Type-88 'Lemon'", ShortName = "TORP-LIGHT", Mass = 250f, Cost = 10.5f, HoverAltitude = -1f, SpeedMultiplier = 0.141f, ExplosiveMultiplier = 2.5f, PenetrationBonus = 500f,
-                Description = "Compact, agile, and deceptively lethal. While its 'Lemon' designation suggests a dud, this torpedo is a nightmare for defensive grids. Its high maneuverability and low-profile signature make it the premier choice for saturation strikes and ambush that exhaust enemy point-defense systems." },
+                Description = "Light, compact, agile, and deceptively lethal. While its 'Lemon' designation suggests a dud, it is anything but, a single Darkreach can launch 32 Lemons at once. Even if it's not the fastest, the deadliest, nor stealthiest, it's the cheapest, most reliable, and most accessible torpedo on the menu." },
             new VariantInfo { SourceMissile = "CruiseMissile1", NewName = "TorpedoBig",
                 DisplayName = "HT-200 'Hammerhead'", ShortName = "TORP-BIG", Mass = 450f, Cost = 12.5f, HoverAltitude = -8f, SpeedMultiplier = 0.047f, ExplosiveMultiplier = 3f, PenetrationBonus = 4000f,
-                Description = "The anvil of the fleet. The Hammerhead sacrifices sprint velocity for raw, concentrated payload capacity. Equipped with an armor-piercing tandem warhead, it is purpose-built to breach reinforced plating and shatter the structural integrity of capital ship keels." },
+                Description = "Heavy, slow, and deadly. Just one Hammerhead has a warhead capable of splitting a capital ship in half, but requiring a patience to see the devastating outcome as it is classified as a marathon torpedo. The same distance travesed by 'Mako' will take twice as long for 'Hammerhead'." },
             new VariantInfo { SourceMissile = "CruiseMissile20kt", NewName = "Torpedo20kt",
-                DisplayName = "NT-2 'Megalodon' (20kt)", ShortName = "TORP-20KT", Mass = 450f, Cost = 12.5f, HoverAltitude = -10f, SpeedMultiplier = 0.059f, ExplosiveMultiplier = 1f, PenetrationBonus = 0f,
-                Description = "The apex predator of the naval theater. This nuclear-tipped strategic ordnance is designed for total area denial. It doesn't just damage; it erases. A single detonation is capable of neutralizing entire battlegroups, turning a tactical engagement into a strategic vacuum." },
+                DisplayName = "NT-2 'Megalodon' (20kt)", ShortName = "TORP-20KT", Mass = 450f, Cost = 12.5f, HoverAltitude = -20f, SpeedMultiplier = 0.059f, ExplosiveMultiplier = 1f, PenetrationBonus = 0f,
+                Description = "Strategic nuclear torpedo. Designed for total annihilation of anything unlucky enough to be within its blast radius. It is the most elusive as it swims the deepest and silent, but is also the slowest torpedo in the menu. Best used as a last resort, or when you have plenty of time." },
         };
 
                  private static readonly HashSet<string> _createdMissiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -328,3 +328,4 @@ namespace Torpedo
         }
     }
 }
+
