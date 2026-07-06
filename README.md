@@ -12,7 +12,7 @@ Adds four torpedo variants to Nuclear Option (cloned from vanilla anti-ship and 
 ### **Type-88 'Lemon'** — Light, compact, cheap, and agile. Deceptively lethal, Ideal choice for saturation or ambush.
 <img width="1670" height="1080" alt="Torp2" src="https://github.com/user-attachments/assets/2d890f87-964c-45d2-b9c3-1c55f9f3d840" />
 
-### **HT-200 'Hammerhead'** — Heavy kinetic penetrator. Low velocity, but carries 1350kg payload to split a carrier in half.
+### **HT-200 'Hammerhead'** — Heavy kinetic penetrator. Low velocity, but will split a carrier in half.
 <img width="1668" height="1080" alt="Torp3" src="https://github.com/user-attachments/assets/1154659d-4843-407a-9019-c9ee3f868bb6" />
 
 ### **NT-2 'Megalodon' (20kt)** — Nuclear-tipped strategic asset. Erasing enemy ship and its escorts in a single delivery.
