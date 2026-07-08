@@ -2,6 +2,9 @@ using HarmonyLib;
 
 namespace Torpedo
 {
+
+
+
     [HarmonyPatch(typeof(OpticalSeekerCruiseMissile), "Initialize")]
     public static class OpticalSeekerCruiseMissile_Initialize_TorpedoPatch
     {
@@ -21,3 +24,4 @@ namespace Torpedo
         }
     }
 }
+

@@ -2,6 +2,14 @@ using HarmonyLib;
 
 namespace Torpedo
 {
+
+
+
+
+
+
+
+
     [HarmonyPatch(typeof(Missile), "ApplyAero")]
     public static class Missile_ApplyAero_TorpedoPatch
     {
@@ -17,9 +25,14 @@ namespace Torpedo
             }
             else if (currentFinAreaTraverse.GetValue<float>() <= 0f)
             {
+
+
+
+
                 Traverse finAreaTraverse = Traverse.Create(__instance).Field("finArea");
                 currentFinAreaTraverse.SetValue(finAreaTraverse.GetValue<float>());
             }
         }
     }
 }
+

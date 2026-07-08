@@ -2,6 +2,10 @@ using HarmonyLib;
 
 namespace Torpedo
 {
+
+
+
+
     [HarmonyPatch(typeof(OpticalSeekerCruiseMissile), "TerrainWaypoint")]
     public static class OpticalSeekerCruiseMissile_TerrainWaypoint_TorpedoPatch
     {
@@ -14,7 +18,9 @@ namespace Torpedo
             if (missile == null || missile.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.TryGetValue(missile.definition.jsonKey, out float hoverAltitude))
                 return true;
-            if (!TorpedoPhysics.InCruisePhase(missile)) return true;
+
+
+
 
             destination.y = hoverAltitude;
             __result = destination;
@@ -22,3 +28,4 @@ namespace Torpedo
         }
     }
 }
+

@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Torpedo
 {
+
+
+
+
+
     [HarmonyPatch(typeof(Missile), "Detonate")]
     public static class Missile_Detonate_TorpedoPatch
     {
@@ -11,10 +16,16 @@ namespace Torpedo
             if (__instance.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.ContainsKey(__instance.definition.jsonKey)) return true;
 
+
+
+
+
             if (!hitArmor && !hitTerrain && !Missile_TakeDamage_TorpedoPatch.InProgress.Contains(__instance))
             {
                 return false;
             }
+
+
 
             TorpedoWake.RemoveWake(__instance);
 
@@ -22,3 +33,4 @@ namespace Torpedo
         }
     }
 }
+

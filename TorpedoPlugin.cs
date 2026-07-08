@@ -4,7 +4,7 @@ using HarmonyLib;
 
 namespace Torpedo
 {
-    [BepInPlugin("neutral.torpedo", "Torpedo", "1.1.0")]
+    [BepInPlugin("neutral.torpedo", "Torpedo", "1.1.1")]
     public class TorpedoPlugin : BaseUnityPlugin
     {
         public static TorpedoPlugin Instance;
@@ -18,7 +18,8 @@ namespace Torpedo
             var harmony = new Harmony("neutral.torpedo");
             harmony.PatchAll();
 
-            ModLogger.LogInfo("[Torpedo] Torpedo mod loaded!");
+            ModLogger.LogInfo("[Torpedo] Torpedo away!");
         }
     }
 }
+

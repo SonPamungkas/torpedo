@@ -28,13 +28,26 @@ namespace Torpedo
         private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, Transform> targetPartRef =
             AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, Transform>("targetPart");
 
+
+
+
         private static readonly HashSet<OpticalSeekerCruiseMissile> _neutered = new HashSet<OpticalSeekerCruiseMissile>();
+
+
+
+
+
+
+
 
         public static bool Prefix(Missile __instance, ref GlobalPosition aimPoint, ref Vector3 targetVel)
         {
             if (__instance.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.TryGetValue(__instance.definition.jsonKey, out float hoverAltitude))
                 return true;
+
+
+
 
             if (__instance.GlobalPosition().y > 0f && __instance.rb.velocity.magnitude < 10f)
             {
@@ -64,14 +77,28 @@ namespace Torpedo
 
                 finDelayRef(cSeeker) = float.MaxValue;
 
+
+
+
+
+
                 terminalRangeRef(cSeeker) = float.MaxValue;
             }
+
+
+
 
             if (seekerRef(__instance) is OpticalSeekerCruiseMissile seeker)
             {
                 altitudeTargetRef(seeker) = hoverAltitude;
 
+
+
                 terminalModeRef(seeker) = true;
+
+
+
+
 
                 if (targetPartRef(seeker) == null)
                 {
@@ -80,13 +107,27 @@ namespace Torpedo
                 }
             }
 
+
+
+
+
+
+
             aimPoint.y = __instance.GlobalPosition().y;
 
+
+
+
             bool cruising = TorpedoPhysics.InCruisePhase(__instance);
+
+
+
             TorpedoWake.UpdateWake(__instance, TorpedoPhysics.IsUnderWater(__instance));
 
             if (cruising)
             {
+
+
                 if (!TorpedoPhysics.IsOverWater(__instance))
                 {
                     AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { Vector3.up, false, true });
@@ -94,23 +135,14 @@ namespace Torpedo
                     return false;
                 }
 
+
+
                 if (__instance.GlobalPosition().y <= 0f)
                 {
                     TorpedoPhysics.ApplyTorpedoPhysics(__instance, hoverAltitude);
                 }
 
-                int motorStage = Traverse.Create(__instance).Field("motorStage").GetValue<int>();
-                if (motorStage >= 1)
-                {
-                    object irSourcesObj = Traverse.Create(__instance).Field("IRSources").GetValue();
-                    if (irSourcesObj is System.Collections.IEnumerable irSources)
-                    {
-                        foreach (object source in irSources)
-                        {
-                            if (source is IRSource irSource) irSource.intensity = 0f;
-                        }
-                    }
-                }
+
 
                 Vector3 toTarget = aimPoint - __instance.GlobalPosition();
                 if (toTarget.sqrMagnitude < 40000f)
@@ -128,3 +160,4 @@ namespace Torpedo
         }
     }
 }
+
