@@ -1,12 +1,8 @@
 using System;
 using HarmonyLib;
 using UnityEngine;
-
 namespace Torpedo
 {
-
-
-
     [HarmonyPatch(typeof(Hardpoint), "SpawnMount")]
     public static class TorpedoMountActivatePatch
     {
@@ -28,4 +24,3 @@ namespace Torpedo
         }
     }
 }
-

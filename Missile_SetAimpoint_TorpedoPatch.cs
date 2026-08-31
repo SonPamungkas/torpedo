@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
-
 namespace Torpedo
 {
     [HarmonyPatch(typeof(Missile), "SetAimpoint")]
@@ -27,137 +26,73 @@ namespace Torpedo
             AccessTools.FieldRefAccess<MissileSeeker, Unit>("targetUnit");
         private static readonly AccessTools.FieldRef<OpticalSeekerCruiseMissile, Transform> targetPartRef =
             AccessTools.FieldRefAccess<OpticalSeekerCruiseMissile, Transform>("targetPart");
-
-
-
-
         private static readonly HashSet<OpticalSeekerCruiseMissile> _neutered = new HashSet<OpticalSeekerCruiseMissile>();
-
-
-
-
-
-
-
-
         public static bool Prefix(Missile __instance, ref GlobalPosition aimPoint, ref Vector3 targetVel)
         {
             if (__instance.definition == null) return true;
             if (!TorpedoMounts_Patch.HoverAltitudeByName.TryGetValue(__instance.definition.jsonKey, out float hoverAltitude))
                 return true;
-
-
-
-
             if (__instance.GlobalPosition().y > 0f && __instance.rb.velocity.magnitude < 10f)
             {
-                AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { Vector3.up, false, true });
-                __instance.rb.velocity = Vector3.zero;
+                TorpedoPhysics.DetonateAndStop(__instance, Vector3.up, hitArmor: false, hitTerrain: true);
                 return false;
             }
-
             if (seekerRef(__instance) is OpticalSeekerCruiseMissile cSeeker && _neutered.Add(cSeeker))
             {
                 JinkEvasion jink = jinkRef(cSeeker);
                 if (jink != null) jink.amount = 0f;
-
                 TopAttack topAttack = topAttackRef(cSeeker);
                 if (topAttack != null)
                 {
                     topAttack.Amount = 0f;
                     topAttack.Active = false;
                 }
-
                 TerminalBoost terminalBoost = terminalBoostRef(cSeeker);
                 if (terminalBoost != null)
                 {
                     terminalBoost.Amount = 0f;
                     terminalBoost.Active = false;
                 }
-
                 finDelayRef(cSeeker) = float.MaxValue;
-
-
-
-
-
-
                 terminalRangeRef(cSeeker) = float.MaxValue;
             }
-
-
-
-
             if (seekerRef(__instance) is OpticalSeekerCruiseMissile seeker)
             {
                 altitudeTargetRef(seeker) = hoverAltitude;
-
-
-
                 terminalModeRef(seeker) = true;
-
-
-
-
-
                 if (targetPartRef(seeker) == null)
                 {
                     Unit targetUnit = targetUnitRef(seeker);
-                    if (targetUnit != null) targetPartRef(seeker) = targetUnit.GetRandomPart();
+                    if (targetUnit != null)
+                    {
+                        Transform targetPart = targetUnit.GetRandomPart();
+                        targetPartRef(seeker) = targetPart;
+                        __instance.SetProxyFuse(targetPart, targetUnit.rb);
+                    }
                 }
             }
-
-
-
-
-
-
-
             aimPoint.y = __instance.GlobalPosition().y;
-
-
-
-
             bool cruising = TorpedoPhysics.InCruisePhase(__instance);
-
-
-
             TorpedoWake.UpdateWake(__instance, TorpedoPhysics.IsUnderWater(__instance));
-
             if (cruising)
             {
-
-
                 if (!TorpedoPhysics.IsOverWater(__instance))
                 {
-                    AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { Vector3.up, false, true });
-                    __instance.rb.velocity = Vector3.zero;
+                    TorpedoPhysics.DetonateAndStop(__instance, Vector3.up, hitArmor: false, hitTerrain: true);
                     return false;
                 }
-
-
-
                 if (__instance.GlobalPosition().y <= 0f)
                 {
                     TorpedoPhysics.ApplyTorpedoPhysics(__instance, hoverAltitude);
                 }
-
-
-
                 Vector3 toTarget = aimPoint - __instance.GlobalPosition();
-                if (toTarget.sqrMagnitude < 40000f)
+                if (toTarget.sqrMagnitude < 40000f && Vector3.Dot(toTarget, __instance.rb.velocity) < 0f)
                 {
-                    if (Vector3.Dot(toTarget, __instance.rb.velocity) < 0f)
-                    {
-                        AccessTools.Method(typeof(Missile), "Detonate").Invoke(__instance, new object[] { Vector3.up, true, false });
-                        __instance.rb.velocity = Vector3.zero;
-                        return false;
-                    }
+                    TorpedoPhysics.DetonateAndStop(__instance, Vector3.up, hitArmor: true, hitTerrain: false);
+                    return false;
                 }
             }
-
             return true;
         }
     }
 }
-
